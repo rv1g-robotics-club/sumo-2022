@@ -125,7 +125,18 @@ rob.turn(30000, 90)
 Sensoriem tiek izmantots optiskais infrasarkanais (Infra Red - IR) uztvērējs, kas tiek izmantots TV pultīs. Tā priekšrocība ir apkārtējā apgaismojuma trokšņu imunitāte - tos neietekmē apkārtējais apgaismojums, uztverts tiek tikai tas signāls, ko robots pats raida.
 
 ```python
+from machine import Pin PWM
 
+# Uzskāt 38kHz IR signāla raidīšanu
+ir = PWM(Pin(5), freq=38000, duty_u16=0x8000)
+
+# Sensora ieejas konfigurācija
+sen = Pin(35, Pin.IN, Pin.PULL_UP)
+
+# Sensora stāvokļa nolasīšana
+# 0 - objekts uztverts
+# 1 - objekts nav uztverts
+print(sen.value())
 ```
 
 ### Grīdas sensori
@@ -133,7 +144,16 @@ Sensoriem tiek izmantots optiskais infrasarkanais (Infra Red - IR) uztvērējs, 
 Grīdas sensori izmanto IR gaismas atstarošanos no virsmas. Gaiša/balta virsma atstaro lielāku gaismas daudzumu, tumša/melna - mazāku.
 
 ```python
+from machine import Pin, ADC
 
+# Sensora inicializācija
+flr = ADC(Pin(36))
+flr.atten(ADC.ATTN_11DB)
+
+# Mērījuma nolasīšana [0 - 4095]
+# 0 - signāls neatstarojas
+# 4095 - maksimālais signāls uztverts
+print(flr.read())
 ```
 
 ### Lāzera Time of Flight sensors (VL53L0X)
